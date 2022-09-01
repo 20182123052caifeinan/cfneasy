@@ -1,0 +1,39 @@
+#spring.cloud.consul.host=localhost
+#spring.cloud.consul.port= 8500
+#spring.cloud.consul.enabled=true
+#spring.cloud.consul.discovery.register=true
+#spring.application.name=cfneasy
+#spring.cloud.consul.discovery.service-name=${spring.application.name}
+#spring.cloud.consul.discovery.prefer-ip-address=true
+#spring.cloud.consul.discovery.healthCheckInterval=15s
+#spring.cloud.consul.discovery.health-check-path=/health
+##spring.cloud.consul.discovery.tags
+#
+#
+server.port: 8089
+spring:
+  application:
+    name: cfneasy
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        register: true    #??????????
+        prefer-ip-address: true
+        healthCheckPath: /health
+        service-name: ${spring.application.name}
+        instance-id: ${spring.application.name}
+        health-check-interval: 15s # ??15s???????
+        register-health-check: true
+        port: 8089
+        heartbeat:
+          ttl: 10s
+
+management:
+  health:
+    db:
+      enabled: false
+  endpoints:
+    web:
+      base-path: /health

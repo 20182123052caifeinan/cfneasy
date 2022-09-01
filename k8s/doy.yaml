@@ -1,0 +1,43 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  labels:
+    k8s-app: cfneasy
+  name: cfneasy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: cfneasy
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        consul: consulclient
+        k8s-app: cfneasy
+    spec:
+      containers:
+        - env:
+            - name: CONSUL_HOST
+              value: '127.0.0.1'
+            - name: CONSUL_PORT
+              value: '8500'
+          image: local.harbor/test/cfneasy:0.0.4
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health/health
+              port: 8089
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: cfneasy
+          ports:
+            - containerPort: 8089
+              protocol: TCP
+      imagePullSecrets:
+        - name: registrysecret
+      restartPolicy: Always
